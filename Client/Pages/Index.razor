@@ -1,7 +1,38 @@
 ﻿@page "/"
+@using BlazorApp.Shared
+@inject HttpClient Http
 
-<h1>Hello, world!</h1>
+<h1>Generate a random episode</h1>
 
-Welcome to your new app.
+Let's blow dro, bro
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+
+<button class="btn btn-primary" @onclick="GetRandomEpisode">Generate Episode</button>
+
+
+@if (randomEpisode == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p>Selected: @randomEpisode.title from Season: @randomEpisode.season</p>
+}
+
+@code{
+    private Episode randomEpisode;
+    private async void GetRandomEpisode()
+    {
+
+        try
+        {
+            randomEpisode = await Http.GetFromJsonAsync<Episode>("/api/RandomEpisode");
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex.ToString());
+        }
+
+    }
+}

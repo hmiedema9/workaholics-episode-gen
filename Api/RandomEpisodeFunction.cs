@@ -8,21 +8,18 @@ using System.IO;
 
 namespace BlazorApp.Api
 {
-    public static class EpisodeFunctions
+    public static class RandomEpisodeFunction
     {
-        private static string GetEpisode(int temp)
-        {
-            return "";
-        }
-
-        [FunctionName("Episodes")]
+        [FunctionName("RandomEpisode")]
         public static IActionResult Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log, ExecutionContext context)
         {
             var json = File.ReadAllText(Path.Combine(context.FunctionAppDirectory, "data/workaholics.json"));
             var episodes = System.Text.Json.JsonSerializer.Deserialize<Episode[]>(json);
-            return new OkObjectResult(episodes);
+            System.Random rand = new System.Random();
+            var randomEpisode = rand.Next(0, episodes.Length);
+            return new OkObjectResult(episodes[randomEpisode]);
         }
     }
 }
