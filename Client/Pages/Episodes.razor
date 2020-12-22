@@ -1,0 +1,70 @@
+﻿@page "/episodes"
+@using BlazorApp.Shared
+@inject HttpClient Http
+
+<h1>All Episodes</h1>
+
+@if (episodes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Season</th>
+                <th>Episode #</th>
+                <th>Title</th>
+                <th>Directed By</th>
+                <th>Written By</th>
+                <th>Air Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var episode in episodes)
+            {
+                <tr>
+                    <td>@episode.season</td>
+                    <td>@episode.episode</td>
+                    <td>@episode.title</td>
+                    <td>@episode.directed_by</td>
+                    <td>@episode.written_by</td>
+                    <td>@episode.air_date</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code{
+    private Episode[] episodes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            episodes = await Http.GetFromJsonAsync<Episode[]>("/api/Episodes");
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex.ToString());
+        }
+    }
+
+    //protected override void OnInitialized()
+    //{
+    //    try
+    //    {
+    //        var json = System.IO.File.ReadAllText("~/data/workaholics.json");
+    //        episodes = System.Text.Json.JsonSerializer.Deserialize<Episode[]>(json);
+    //    }
+    //    catch (Exception ex)
+    //    {
+
+    //        Console.Write(ex.Message);
+    //    }
+
+    //}
+}
